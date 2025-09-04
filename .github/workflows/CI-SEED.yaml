@@ -6,8 +6,8 @@ on:
       - "[0-9]+.[0-9]+.[0-9]+"
     paths:
       - .github/workflows/CI-SEED.yaml
-      - "resources/Dockerfile"
-      - "resources/seed/**"
+      - "core/resources/Dockerfile"
+      - "core/resources/seed/**"
 
 env:
   docker_image_tag: ${{ github.ref == 'refs/heads/main' && github.sha || github.ref_name }}
@@ -27,5 +27,5 @@ jobs:
           image: "us-docker.pkg.dev/integrationos/docker-oss/seed-data:${{ env.docker_image_tag }}"
           service_account: github-actions@integrationos.iam.gserviceaccount.com
           workload_identity_provider: projects/356173785332/locations/global/workloadIdentityPools/github-actions/providers/github-actions
-          context: resources
-          file: resources/Dockerfile
+          context: core/resources
+          file: core/resources/Dockerfile
