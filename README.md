@@ -1,14 +1,14 @@
 <p align="center">
   <a href="https://picaos.com">
-    <img alt="Pica Logo" src="./resources/images/banner.svg" style="border-radius: 10px;">
+    <img alt="Pica Logo" src="https://assets.picaos.com/github/header.svg" style="border-radius: 10px;">
   </a>
 </p>
 
-<p align="center"><b>Pica, The AI Integrations Solution</b></p>
+<p align="center"><b>Pica</b> - <i>Ensuring outcomes for the AI-first world</i></p>
 
 <p align="center">
   <b>
-    <a href="https://www.picaos.com/">Website</a>
+    <a href="https://www.picaos.com">Website</a>
     ·
     <a href="https://docs.picaos.com">Documentation</a>
     ·
@@ -24,133 +24,114 @@
 
 ---
 
-Pica gives every builder instant, reliable access to the tools they need—no keys, no configs, no headaches.
+Connect LLMs to 25,000+ actions with Pica-verified knowledge and developer-friendly SDKs. No keys, no configs, no headaches.
 
-## Why Pica?
+Pica makes it simple to build and manage AI agents with 3 key products:
+1. **OneTool**: Connect agents to over [150+ integrations](https://picaos.com/integrations) with a single SDK. Zero-shot execution that gets smarter with every use.
+2. **AuthKit**: Streamline authentication for multi-tenant applications with secure, end-to-end OAuth flows and automated token management. Handles the complexity of authentication so you don't have to.
+3. **BuildKit**: Create AI tools for integrations or empower vibe coding with integrations that work zero-shot.
 
-Pica simplifies AI agent development with our four core products:
+Built in Rust for blazing speed and ultra-low latency execution. Full logging and action traceability gives developers complete visibility into their agents' decisions and activities. Our tools simplify building and running AI agents so developers can focus on results.
 
-✅ OneTool – Connect agents to [100+ APIs and tools](https://app.picaos.com/tools) with a single SDK. <br/>
-✅ AuthKit – Secure authentication for seamless tool integration. <br/>
-✅ BuildKit - Empower vibe coding with integrations that work zero-shot.
+# Getting started 👋
 
-Pica also provides full logging and action traceability, giving developers complete visibility into their agents’ decisions and activities. Our tools simplify building and running AI agents so developers can focus on results.
+Follow this tutorial to build a tool to fetch your Gmail emails in under 5 minutes.
 
-## Getting started
+> 📖 **Full Demo**: For a comprehensive walkthrough with all IDE and framework options, visit [buildkit.picaos.com](https://buildkit.picaos.com)
 
-### Install
+> 🎥 **Demo Video**: Watch the [4-minute tutorial](https://youtu.be/EnbRfu-BsJE)
+
+## What we'll do:
+
+1. Install the Pica MCP Server
+2. Connect your Gmail account  
+3. Set up a starter project with Vercel AI SDK
+4. Add some rules for the LLMs to understand BuildKit
+5. Prompt the LLM to build your tool
+
+## Step 1: Install the Pica MCP Server
+
+In the Cursor menu, select "MCP Settings" and update the MCP JSON file to include the following:
+
+```json
+{
+  "mcpServers": {
+    "pica": {
+      "command": "npx",
+      "args": ["@picahq/mcp"],
+      "env": {
+        "PICA_SECRET": "your-pica-secret-key"
+      }
+    }
+  }
+}
+```
+
+**Note:** Replace `your-pica-secret-key` with your actual Pica secret key from the dashboard: [Get API Key](https://app.picaos.com/settings/api-keys)
+
+## Step 2: Connect your Gmail account
+
+Now we need to connect your Gmail account so we can test our tool after we build it.
+
+[**Add Gmail Connection →**](https://app.picaos.com/connections)
+
+## Step 3: Set up a starter project
+
+#### 1. Clone and install dependencies
 
 ```bash
-npm install @picahq/ai
+git clone https://github.com/picahq/buildkit-vercel-ai-starter.git && cd buildkit-vercel-ai-starter
 ```
 
-### Setup
-
-1. Create a new [Pica account](https://app.picaos.com)
-2. Create a Connection via the [Dashboard](https://app.picaos.com/connections)
-3. Create an [API key](https://app.picaos.com/settings/api-keys)
-4. Set the API key as an environment variable: `PICA_SECRET_KEY=<your-api-key>`
-
-### Example Usage
-
-Below is an example demonstrating how to integrate the [Pica OneTool](https://www.npmjs.com/package/@picahq/ai) with the [Vercel AI SDK](https://www.npmjs.com/package/ai) for a GitHub use case:
-
-```typescript
-import { openai } from "@ai-sdk/openai";
-import { generateText } from "ai";
-import { Pica } from "@picahq/ai";
-import * as dotenv from "dotenv";
-dotenv.config();
-
-const pica = new Pica(process.env.PICA_SECRET_KEY!, {
-  connectors: ["*"]
-});
-
-async function runAgentTask(message: string): Promise<string> {
-  const system = await pica.generateSystemPrompt();
-
-  const { text } = await generateText({
-    model: openai("gpt-4.1"),
-    system,
-    prompt: message,
-    tools: { ...pica.oneTool },
-    maxSteps: 10,
-  });
-
-  return text;
-}
-
-runAgentTask("Star the repo picahq/pica with github")
-  .then((text) => {
-    console.log(text);
-  })
-  .catch(console.error);
+```bash
+npm install
 ```
 
-[![Try with Replit Badge](https://replit.com/badge?caption=Try%20with%20Replit)](https://replit.com/@picahq/Pica-or-GitHub-Star-Demo)
+#### 2. Set up environment variables
 
+Create a `.env.local` file in the root directory:
 
-For more use cases, visit our [Use Cases Library](https://www.picaos.com/community/use-cases) or our [Awesome Pica Repository](https://github.com/picahq/awesome-pica).
+```env
+OPENAI_API_KEY=your_openai_api_key_here
+```
 
-### Next.js Integration
+#### 3. Run the development server
 
-⭐️ You can see a full Next.js demo [here](https://github.com/picahq/onetool-demo)
+```bash
+npm run dev
+```
 
+#### 4. Open your browser
 
-> For more examples and detailed documentation, check out our [SDK documentation](https://docs.picaos.com/sdk/vercel-ai).
+Navigate to `http://localhost:3000` to see the chat interface.
+
+## Step 4: Add some rules for the LLMs to understand BuildKit
+
+### BuildKit Rules for Cursor
+
+Create a `.cursor/rules/buildkit.mdc` file in the root of your project and copy the rules from our local file:
+
+📋 **Copy the rules**: [buildkit/rules/cursor/buildkit.mdc](buildkit/rules/cursor/buildkit.mdc)
+
+### ✅ Verify Setup
+
+You can verify setup by asking "What connections do I have in Pica?" - it should show your Gmail connection.
+
+## Step 5: Prompt the LLM to build your tool
+
+Now you can ask Cursor to build a Gmail tool for you! Copy this prompt:
+
+> Create me a tool called fetchGmailEmails in my Vercel AI SDK agent for fetching my Gmail unread emails and returning the content using BuildKit
+
+🎉 **You now have a working AI tool to fetch your Gmail unread emails in under 5 minutes!**
 
 ---
 
-## Running Pica locally
+## 🚀 What's Next?
 
-> [!IMPORTANT]
-> The Pica dashboard is going open source! Stay tuned for the big release 🚀
+Ready to build more AI tools? Pica connects to 150+ platforms with zero-shot execution.
 
-### Prerequisites
+**🔗 [Explore All Integrations](https://buildkit.picaos.com/integrations)** - Discover integrations for HubSpot, Salesforce, Slack, GitHub, and more
 
-* [Docker](https://docs.docker.com/engine/)
-* [Docker Compose](https://docs.docker.com/compose/)
+**⚡ [Launch Pica Dashboard](https://app.picaos.com)** - Manage connections, support multi-tenant authentication, monitor usage, and scale your AI agents
 
-### Step 1: Install the Pica CLI
-
-```sh
-npm install -g @picahq/cli
-```
-
-### Step 2: Initialize the Pica CLI
-
-To generate the configuration file, run:
-
-```shell
-pica init
-```
-
-### Step 3: Start the Pica Server
-
-```sh
-pica start
-```
-
-> All the inputs are required. Seeding is optional, but recommended when running the command for the first time.
-
-##### Example
-
-```Shell
-# To start the docker containers
-pica start
-Enter the IOS Crypto Secret (32 characters long): xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-Do you want to seed? (Y/N) y
-```
-
-**The Pica API will be available at `http://localhost:3005` 🚀**
-
-To stop the docker containers, simply run:
-
-```Shell
-pica stop
-```
-
-
-## License
-
-Pica is released under the [**GPL-3.0 license**](LICENSE).
