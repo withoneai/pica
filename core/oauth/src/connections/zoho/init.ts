@@ -1,4 +1,5 @@
 import axios from 'axios';
+import qs from 'qs';
 import { DataObject, OAuthResponse } from '../../lib/types';
 
 export const init = async ({ body }: DataObject): Promise<OAuthResponse> => {
@@ -14,11 +15,22 @@ export const init = async ({ body }: DataObject): Promise<OAuthResponse> => {
             additionalData['accounts-server'],
         );
 
-        let url = `${ZOHO_ACCOUNTS_DOMAIN}/oauth/v2/token?grant_type=authorization_code`;
-        url += `&client_id=${clientId}&client_secret=${clientSecret}`;
-        url += `&code=${code}&redirect_uri=${redirectUri}`;
+        const requestBody = {
+            grant_type: 'authorization_code',
+            client_id: clientId,
+            client_secret: clientSecret,
+            code,
+            redirect_uri: redirectUri,
+        };
 
-        const response = await axios.post(url);
+        const response = await axios({
+            url: `${ZOHO_ACCOUNTS_DOMAIN}/oauth/v2/token`,
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            data: qs.stringify(requestBody),
+        });
 
         const {
             data: {
