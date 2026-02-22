@@ -1,4 +1,5 @@
 import axios from 'axios';
+import qs from 'qs';
 import { DataObject, OAuthResponse } from '../../lib/types';
 
 export const refresh = async ({ body }: DataObject): Promise<OAuthResponse> => {
@@ -13,10 +14,21 @@ export const refresh = async ({ body }: DataObject): Promise<OAuthResponse> => {
         let refreshToken = refresh_token;
         const ZOHO_ACCOUNTS_DOMAIN = meta.ZOHO_ACCOUNTS_DOMAIN;
 
-        let url = `${ZOHO_ACCOUNTS_DOMAIN}/oauth/v2/token?grant_type=refresh_token`;
-        url += `&client_id=${client_id}&client_secret=${client_secret}&refresh_token=${refresh_token}`;
+        const requestBody = {
+            grant_type: 'refresh_token',
+            client_id,
+            client_secret,
+            refresh_token,
+        };
 
-        const response = await axios.post(url);
+        const response = await axios({
+            url: `${ZOHO_ACCOUNTS_DOMAIN}/oauth/v2/token`,
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            data: qs.stringify(requestBody),
+        });
 
         const {
             data: {
