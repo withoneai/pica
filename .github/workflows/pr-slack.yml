@@ -1,0 +1,20 @@
+# Opt-in to the org's reusable PR notifier, which posts to #pull-requests and
+# edits one message per PR in place. Copying this file is the only step - the
+# SLACK_BOT_TOKEN secret and SLACK_PR_CHANNEL variable are org-wide.
+# Source and docs: withoneai/infrastructure, CLAUDE.md "GitHub Actions".
+# Delete this file to opt out.
+
+name: pr-slack
+
+on:
+  pull_request:
+    types: [opened, reopened, ready_for_review, converted_to_draft, closed]
+  pull_request_review:
+    types: [submitted]
+  push:
+    branches: [main, master]
+
+jobs:
+  notify:
+    uses: withoneai/infrastructure/.github/workflows/slack-pr-notify.yml@main
+    secrets: inherit
