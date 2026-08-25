@@ -12,7 +12,10 @@ export const init = async ({ body }: DataObject): Promise<OAuthResponse> => {
         const response = await axios({
             url: 'https://auth.atlassian.com/oauth/token',
             method: 'POST',
-            params: {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            data: {
                 grant_type: 'authorization_code',
                 code,
                 client_id,
